@@ -1,4 +1,4 @@
-import { PersonRepository } from './personRepository';
+import { PersonRepository } from './PersonRepository';
 
 function main() {
     const people = PersonRepository.loadPeople();

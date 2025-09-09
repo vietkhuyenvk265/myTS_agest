@@ -1,5 +1,5 @@
 import peopleData from '../data/people.json';
-import { Person } from './person';
+import { Person } from './Person';
 import fs from 'fs';
 import path from 'path';
 
