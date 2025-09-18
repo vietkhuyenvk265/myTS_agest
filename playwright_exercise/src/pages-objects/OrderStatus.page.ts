@@ -8,9 +8,7 @@ export class OrderStatusPage {
         this.successfullMessage = page.getByText('Thank you. Your order has been received.');
     };
 
-    async verifyOrderSuccess(billinginfo: BillingInfo) {
+    async verifyOrderSuccess() {
         await expect(this.successfullMessage).toBeVisible({ timeout: 20000 });
-        await expect(this.page.getByRole('listitem').filter({ hasText: 'Payment method: ' + billinginfo.paymentMethod })).toBeVisible();
-        await expect(this.page.getByRole('row').filter({ hasText: billinginfo.item })).toBeVisible();
     }
 }

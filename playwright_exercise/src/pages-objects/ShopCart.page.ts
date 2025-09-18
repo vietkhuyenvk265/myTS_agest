@@ -26,8 +26,12 @@ export class ShopCartPage {
         }
     }
 
-    async verifyShoppingCart(item: string) {
-            await expect(this.itemRow.filter({ hasText: item})).toBeVisible();
+    async verifyShoppingCart(items: string[]) {
+        for (const item of items) {
+            const locator = this.itemRow.filter({ hasText: item });
+            await expect(locator).toBeVisible();
+            console.log(`"${item}" is visible in the cart.`);
+        }
     }
-
 }
+

@@ -1,4 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
+
 export class LogIn {
     readonly username: Locator;
     readonly password: Locator;
@@ -18,6 +19,7 @@ export class LogIn {
             await this.username.fill(username);
             await this.password.fill(password);
             await this.loginButton.click();
+            console.log('Login completed');
         }
     }
 }

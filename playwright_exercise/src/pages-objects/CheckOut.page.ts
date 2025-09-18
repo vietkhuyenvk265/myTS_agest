@@ -8,23 +8,12 @@ export interface BillingInfo {
     city?: string;
     phone?: string;
     email?: string;
-    item: string;
     zipcode?: string;
     company?: string;
     apartment?: string;
     notes?: string;
     paymentMethod?: 'Direct bank transfer' | 'Check payments' | 'Cash on delivery';
 };
-
-export interface MandatoryFields {
-    firstname?: 'check';
-    lastname?: 'check';
-    country?: 'check';
-    address?: 'check';
-    city?: 'check';
-    phone?: 'check';
-    email?: 'check';
-}
 
 export class CheckOutPage {
     readonly firstName: Locator;
@@ -62,64 +51,39 @@ export class CheckOutPage {
     };
 
     async fillBillingDetails(billinginfo: BillingInfo) {
-        await this.firstName.fill('');
-        await this.lastName.fill('');
-        await this.streetAddress.fill('');
-        await this.city.fill('');
-        await this.phone.fill('');
-        await this.email.fill('');
-        await this.company.fill('');
-        await this.apartment.fill('');
-        await this.notes.fill('');
-
-        if (billinginfo.firstname) {
-            await this.firstName.fill(billinginfo.firstname);
+        const fieldLocators: { [key in keyof BillingInfo]: Locator | null } = {
+            firstname: this.firstName,
+            lastname: this.lastName,
+            country: this.country,
+            address: this.streetAddress,
+            city: this.city,
+            phone: this.phone,
+            email: this.email,
+            zipcode: this.zipCode,
+            company: this.company,
+            apartment: this.apartment,
+            notes: this.notes,
+            paymentMethod: null,
         };
 
-        if (billinginfo.lastname) {
-            await this.lastName.fill(billinginfo.lastname);
-        };
-
-        if (billinginfo.country) {
-            await this.country.click();
-            await this.page.getByRole('option', { name: billinginfo.country }).click();
-        };
-
-        if (billinginfo.address) {
-            await this.streetAddress.fill(billinginfo.address);
-        };
-
-        if (billinginfo.city) {
-            await this.city.fill(billinginfo.city);
-        };
-
-        if (billinginfo.phone) {
-            await this.phone.fill(billinginfo.phone);
-        };
-
-        if (billinginfo.email) {
-            await this.email.fill(billinginfo.email);
-        };
-
-        if (billinginfo.zipcode) {
-            await this.zipCode.fill(billinginfo.zipcode);
-        };
-
-        if (billinginfo.company) {
-            await this.company.fill(billinginfo.company);
-        };
-
-        if (billinginfo.apartment) {
-            await this.apartment.fill(billinginfo.apartment);
-        };
-
-        if (billinginfo.notes) {
-            await this.notes.fill(billinginfo.notes);
-        };
-
-        await this.page.getByRole('radio', { name: billinginfo.paymentMethod }).setChecked(true);
+        for (const field in billinginfo) {
+            const value = billinginfo[field as keyof BillingInfo];
+            if (value) {
+                if (field === "country") {
+                    await this.country.click();
+                    await this.page.getByRole('option', { name: billinginfo.country }).click();
+                } else if (field === "paymentMethod") {
+                    await this.page.getByRole('radio', { name: billinginfo.paymentMethod }).setChecked(true);
+                } else {
+                    const locator = fieldLocators[field as keyof BillingInfo];
+                    if (locator) {
+                        await locator.fill(value);
+                    }
+                };
+            }
+        }
 
         await this.placeOrder.click();
+        console.log('Place Done');
     };
-
 }

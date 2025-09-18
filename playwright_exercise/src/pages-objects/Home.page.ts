@@ -19,29 +19,29 @@ export class HomePage {
     }
 
     async navigate() {
-        const baseUrl = 'https://demo.testarchitect.com/';
-        await this.page.goto(baseUrl);
+        await this.page.goto('/');
         await this.closeButton.click();
         await expect(this.page).toHaveTitle('TestArchitect Sample Website – Just using for training purpose only')
+        console.log('Page loaded successfully')
     }
 
     async selectItemInMainMenu(item: string) {
-        const items = item.split('/');
-        const counts = items.length;
-
+        await this.page.waitForLoadState('load');
         await this.categoryMainMenu.click();
-        await this.categoryMainMenu.waitFor();
-        await this.categoryMainMenu.click();
-
-        for (let i = 0; i < counts; i++) {
-            let regex: RegExp = new RegExp(items[i]);
-            await this.page.getByRole('listitem').filter({ hasText: items[i] }).click();
-        }
+        await this.page.getByRole('listitem').filter({ hasText: item }).click();
+        console.log('Open ' + item + ' in main menu')
     }
 
     async openCart() {
         await this.cart.click();
         await this.cart.click();
+        console.log('Open Cart')
+    }
+
+    async navigateMenu(item: string) {
+        await this.page.locator('#menu-main-menu-1').getByRole('link', { name: item}).waitFor({state: 'attached'});
+        await this.page.locator('#menu-main-menu-1').getByRole('link', { name: item}).click();
+        console.log('Navigate to ' + item);
     }
 
 }
