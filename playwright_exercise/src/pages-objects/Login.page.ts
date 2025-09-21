@@ -14,12 +14,11 @@ export class LogIn {
     }
 
     async login(username: string, password: string) {
-        if (await this.signupButton.isVisible()) {
+            await this.page.goto('/my-account/');
             await this.signupButton.click();
             await this.username.fill(username);
             await this.password.fill(password);
             await this.loginButton.click();
             console.log('Login completed');
-        }
     }
 }

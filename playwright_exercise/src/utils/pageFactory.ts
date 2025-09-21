@@ -5,6 +5,7 @@ import { ShopPage } from '../pages-objects/Shop.page';
 import { ShopCartPage } from '../pages-objects/ShopCart.page';
 import { CheckOutPage } from '../pages-objects/CheckOut.page';
 import { OrderStatusPage } from '../pages-objects/OrderStatus.page';
+import { MyAccountPage } from '../pages-objects/MyAccount.page';
 
 export const createPages = (page) => {
   const homePage = new HomePage(page);
@@ -13,6 +14,7 @@ export const createPages = (page) => {
   const shopCartPage = new ShopCartPage(page);
   const checkOutPage = new CheckOutPage(page);
   const orderStatusPage = new OrderStatusPage(page);
+  const myAccountPage = new MyAccountPage(page);
   
   return {
     homePage,
@@ -21,5 +23,6 @@ export const createPages = (page) => {
     shopCartPage,
     checkOutPage,
     orderStatusPage,
+    myAccountPage
   };
 };

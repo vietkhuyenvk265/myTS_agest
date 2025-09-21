@@ -1,9 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { BillingInfo } from '../pages-objects/CheckOut.page';
-import { config } from '../config';
 import { createPages } from '../utils/pageFactory';
 
-test('Verify users can buy multiple item successfully', async ({ page }) => {
+test('Verify users try to buy an item without logging in_As a guest)', async ({ page }) => {
 
     const {
         homePage,
@@ -11,10 +10,8 @@ test('Verify users can buy multiple item successfully', async ({ page }) => {
         shopPage,
         shopCartPage,
         checkOutPage,
-        orderStatusPage
+        orderStatusPage,
     } = createPages(page);
-
-    const multiProductInfo = ['AirPods', 'Bose SoundLink Mini']
 
     const billInfo: BillingInfo = {
         firstname: 'Khuyen',
@@ -26,26 +23,20 @@ test('Verify users can buy multiple item successfully', async ({ page }) => {
         phone: '0359389266',
     }
 
-    // 1. Open browser and go to https://demo.testarchitect.com/
+    // 1. Open https://demo.testarchitect.com/
     await homePage.navigate();
 
-    // 2. Login with valid credentials
-    await loginPage.login(config.username, config.password);
-
-    // 3. Go to Shop page
+    // 2. Navigate to 'Shop' or 'Products' section
     await homePage.navigateMenu('Shop');
 
-    // 4. Select multiple items and add to cart
-    await shopPage.addToCart(multiProductInfo);
+    // 3. Add a product to cart
+    await shopPage.addToCart(['AirPods']);
 
-    // 5. Go to the cart and verify all selected items
+    // 4. Click on Cart button
     await homePage.openCart();
-    await shopCartPage.verifyShoppingCart(multiProductInfo);
 
-    // 6. Proceed to checkout and confirm order
+    // 5. Proceed to complete order
     await shopCartPage.proceedToCheckout();
-
-    // 7. Verify order confirmation message
     await checkOutPage.fillBillingDetails(billInfo, 'Direct bank transfer');
     await orderStatusPage.verifyOrderSuccess();
 });

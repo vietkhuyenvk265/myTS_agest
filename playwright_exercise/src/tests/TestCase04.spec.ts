@@ -3,7 +3,7 @@ import { BillingInfo } from '../pages-objects/CheckOut.page';
 import { config } from '../config';
 import { createPages } from '../utils/pageFactory';
 
-test('Verify users can buy multiple item successfully', async ({ page }) => {
+test('Verify users can sort items by price', async ({ page }) => {
 
     const {
         homePage,
@@ -14,7 +14,8 @@ test('Verify users can buy multiple item successfully', async ({ page }) => {
         orderStatusPage
     } = createPages(page);
 
-    const multiProductInfo = ['AirPods', 'Bose SoundLink Mini']
+    const ProductInfo = ['AirPods']
+    const PaymentMethod = ['Check payments', 'Cash on delivery', 'Direct bank transfer']
 
     const billInfo: BillingInfo = {
         firstname: 'Khuyen',
@@ -35,17 +36,15 @@ test('Verify users can buy multiple item successfully', async ({ page }) => {
     // 3. Go to Shop page
     await homePage.navigateMenu('Shop');
 
-    // 4. Select multiple items and add to cart
-    await shopPage.addToCart(multiProductInfo);
+    // 4.  Switch view to list
+    await shopPage.switchView('List');
 
-    // 5. Go to the cart and verify all selected items
-    await homePage.openCart();
-    await shopCartPage.verifyShoppingCart(multiProductInfo);
+    // 5. Sort items by price(low to high / high to low)
+    // 6. Verify the order of items
 
-    // 6. Proceed to checkout and confirm order
-    await shopCartPage.proceedToCheckout();
 
-    // 7. Verify order confirmation message
-    await checkOutPage.fillBillingDetails(billInfo, 'Direct bank transfer');
-    await orderStatusPage.verifyOrderSuccess();
+
+
+
+
 });

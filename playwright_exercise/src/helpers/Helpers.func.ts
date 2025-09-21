@@ -1,10 +1,9 @@
 import { expect, Page, Locator } from '@playwright/test';
 
 export class Helpers {
-    static async validateAttribute(locator: Locator, attribute: string, value: string | RegExp) {
-        const attributeValue = await locator.getAttribute(attribute);
-        await expect(attributeValue).toMatch(value);
-    };
+    static async validateClassAttribute(locator: Locator, value: string | RegExp) {
+        await expect(locator).toHaveClass(value, { timeout: 10000 });
+    }
 
     static async checkLocatorExist(page: Page, locator: Locator, timeout: number = 5000): Promise<boolean> {
         try {
@@ -16,6 +15,9 @@ export class Helpers {
     };
 
     static async validatePageTitle(page: Page, expectedTitle: string) {
+        await page.waitForLoadState('load');
+        const actualTitle = await page.title();
+        console.log('Current page title: ' + actualTitle);
         await expect(page).toHaveTitle(expectedTitle);
     }
     

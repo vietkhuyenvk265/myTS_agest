@@ -22,10 +22,9 @@ test('Verify purchase an item processing successfully', async ({ page }) => {
         city: 'Ho Chi Minh',
         email: 'khuyen.le@email.com',
         phone: '0359389266',
-        paymentMethod: 'Direct bank transfer',
     }
 
-    const items = ['DJI Mavic Pro Camera Drone']
+    const item = ['DJI Mavic Pro Camera Drone']
 
     //Step 1: Open browser and go to https://demo.testarchitect.com/
     await homePage.navigate();
@@ -38,23 +37,25 @@ test('Verify purchase an item processing successfully', async ({ page }) => {
     await homePage.selectItemInMainMenu('Electronic Components & Supplies');
 
     //Step 5: Verify the items should be displayed as a grid
-    await Helpers.validateAttribute(shopPage.gridviewSwitch, 'class', /.*active/);
+    await shopPage.switchView('Grid');
+    await shopPage.verifyViewSwitched('Grid');
+    //await Helpers.validateClassAttribute(shopPage.gridviewSwitch, /.*active/);
 
     //Step 6: Switch view to list
     await shopPage.switchView('List');
 
     //Step 7: Verify the items should be displayed as a list
-    await Helpers.validateAttribute(shopPage.listviewSwitch, 'class', /.*active/);
+    await shopPage.verifyViewSwitched('List');
 
     //Step 8: Select any item randomly to purchase
     //Step 9: Click 'Add to Cart'
-    await shopPage.addToCart(items);
+    await shopPage.addToCart(item);
 
     //Step 10: Go to the cart
     await homePage.openCart();
 
     //Step 11: Verify item details in mini content
-    await shopCartPage.verifyShoppingCart(items);
+    await shopCartPage.verifyShoppingCart(item);
 
     //Step 12: Click on Checkout
     await shopCartPage.proceedToCheckout();
@@ -64,7 +65,7 @@ test('Verify purchase an item processing successfully', async ({ page }) => {
 
     //Step 14: Fill the billing details with default payment method
     //Step 15: Click on PLACE ORDER
-    await checkOutPage.fillBillingDetails(billInfo);
+    await checkOutPage.fillBillingDetails(billInfo, 'Direct bank transfer');
 
     //Step 16: Verify Order status page displays
     //Step 17: Verify the Order details with billing and item information

@@ -12,7 +12,6 @@ export interface BillingInfo {
     company?: string;
     apartment?: string;
     notes?: string;
-    paymentMethod?: 'Direct bank transfer' | 'Check payments' | 'Cash on delivery';
 };
 
 export class CheckOutPage {
@@ -50,7 +49,7 @@ export class CheckOutPage {
         this.notes = page.getByRole('textbox', { name: 'Order notes (optional)' });
     };
 
-    async fillBillingDetails(billinginfo: BillingInfo) {
+    async fillBillingDetails(billinginfo: BillingInfo, paymentmethod: string) {
         const fieldLocators: { [key in keyof BillingInfo]: Locator | null } = {
             firstname: this.firstName,
             lastname: this.lastName,
@@ -63,7 +62,6 @@ export class CheckOutPage {
             company: this.company,
             apartment: this.apartment,
             notes: this.notes,
-            paymentMethod: null,
         };
 
         for (const field in billinginfo) {
@@ -72,8 +70,6 @@ export class CheckOutPage {
                 if (field === "country") {
                     await this.country.click();
                     await this.page.getByRole('option', { name: billinginfo.country }).click();
-                } else if (field === "paymentMethod") {
-                    await this.page.getByRole('radio', { name: billinginfo.paymentMethod }).setChecked(true);
                 } else {
                     const locator = fieldLocators[field as keyof BillingInfo];
                     if (locator) {
@@ -83,7 +79,16 @@ export class CheckOutPage {
             }
         }
 
+        //await this.page.getByRole('radio', { name: paymentmethod }).check();
+        await this.page.getByText(paymentmethod).click();
+
         await this.placeOrder.click();
         console.log('Place Done');
     };
+
+    async verifyErrorMessage(messContent: string) {
+        const messageElement = await this.page.getByText(messContent);
+        await expect(messageElement).toBeVisible({ timeout: 30000 });
+        console.log(`Error message found: ${await messageElement.textContent()}`);
+    }
 }

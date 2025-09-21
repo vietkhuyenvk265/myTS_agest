@@ -33,6 +33,7 @@ export class HomePage {
     }
 
     async openCart() {
+        await this.page.waitForLoadState('load');
         await this.cart.click();
         await this.cart.click();
         console.log('Open Cart')

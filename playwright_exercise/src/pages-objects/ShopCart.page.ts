@@ -12,7 +12,12 @@ export class ShopCartPage {
     }
 
     async proceedToCheckout() {
+        if (await this.page.getByTitle('No').count() > 0) {
+            this.page.getByTitle('No').click();
+            console.log('Reject Cookie ')
+        }
         await this.proceedToCheckOut.click();
+        await this.page.waitForLoadState('load');
     }
 
     async clearShoppingCart() {
@@ -23,6 +28,7 @@ export class ShopCartPage {
         for (let i = buttonCounts - 1; i >= 0; i--) {
             const remove = removeButtons[i];
             await remove.click();
+            await this.page.waitForLoadState('domcontentloaded',{timeout: 10000})
         }
     }
 
@@ -32,6 +38,11 @@ export class ShopCartPage {
             await expect(locator).toBeVisible();
             console.log(`"${item}" is visible in the cart.`);
         }
+    }
+
+    async verifyCartIsEmpty() {
+        await expect(this.page.getByRole('heading', { name: 'YOUR SHOPPING CART IS EMPTY' })).toBeVisible();
+        console.log('YOUR SHOPPING CART IS EMPTY');
     }
 }
 

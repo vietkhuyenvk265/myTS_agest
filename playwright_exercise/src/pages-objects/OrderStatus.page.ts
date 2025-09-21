@@ -9,6 +9,8 @@ export class OrderStatusPage {
     };
 
     async verifyOrderSuccess() {
-        await expect(this.successfullMessage).toBeVisible({ timeout: 20000 });
+        await this.page.waitForLoadState('load');
+        await this.page.waitForLoadState('networkidle'); 
+        await expect(this.successfullMessage).toBeVisible({ timeout: 30000 });
     }
 }
